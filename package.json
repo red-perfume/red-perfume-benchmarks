@@ -2,8 +2,8 @@
   "name": "red-perfume-benchmark",
   "version": "1.0.0",
   "scripts": {
-    "start": "node index.js",
-    "test": "node index.js"
+    "start": "node run.js",
+    "test": "node update-readme.js"
   },
   "ManifestComments": [
     "Pinned gzip-size to 6 because 7 requires ESM import"

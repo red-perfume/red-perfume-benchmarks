@@ -21,9 +21,6 @@ if (fs.existsSync('../red-perfume-css/index.js')) {
 function getSavings (a, b) {
   return Math.round(((a / b * 10000) - 10000) * -1) / 100 + '%';
 }
-function localize (num) {
-  return num.toLocaleString() + ' bytes';
-}
 
 function runBenchmark (input, atomizer) {
   // Defaults
@@ -44,7 +41,9 @@ function runBenchmark (input, atomizer) {
   const inputGzip = gzipSize.sync(inputMinified);
 
   // Atomized
+  const start = new Date();
   const atomized = redPerfumeCss({ uglify, input, customLogger });
+  const end = new Date();
   const atomizedCss = atomized.atomizedCss;
   const atomizedErrors = atomized.styleErrors?.length || styleErrors?.length;
   const atomizedMinified = sass.compileString(atomizedCss, { style }).css;
@@ -53,18 +52,19 @@ function runBenchmark (input, atomizer) {
 
   const results = {
     atomizedErrors,
-    input: localize(inputMinifiedLength),
-    atomized: localize(atomizedMinifiedLength),
+    timeToAtomizeMs: end - start,
+    inputBytes: inputMinifiedLength,
+    atomizedBytes: atomizedMinifiedLength,
     savings: getSavings(atomizedMinifiedLength, inputMinifiedLength),
-    inputGzip: localize(inputGzip),
-    atomizedGzip: localize(atomizedGzip),
+    inputGzipBytes: inputGzip,
+    atomizedGzipBytes: atomizedGzip,
     gzipSavings: getSavings(atomizedGzip, inputGzip)
   };
 
   if (atomizedErrors && !atomizedMinifiedLength) {
-    results.atomized = NA;
+    results.atomizedBytes = NA;
     results.savings = NA;
-    results.atomizedGzip = NA;
+    results.atomizedGzipBytes = NA;
     results.gzipSavings = NA;
   }
 
