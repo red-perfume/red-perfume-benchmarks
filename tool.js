@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 
 const gzipSize = require('gzip-size');
 const sass = require('sass');
@@ -14,8 +15,10 @@ let redPerfumeCss = function () {
   };
 };
 
-if (fs.existsSync('../red-perfume-css/index.js')) {
-  redPerfumeCss = require('../red-perfume-css/index.js');
+const relativeAtomizer = path.resolve(__dirname, '..', 'red-perfume-css', 'index.js');
+
+if (fs.existsSync(relativeAtomizer)) {
+  redPerfumeCss = require(relativeAtomizer);
 }
 
 function getSavings (a, b) {
@@ -42,7 +45,7 @@ function runBenchmark (input, atomizer) {
 
   // Atomized
   const start = new Date();
-  const atomized = redPerfumeCss({ uglify, input, customLogger });
+  const atomized = atomizer({ uglify, input, customLogger });
   const end = new Date();
   const atomizedCss = atomized.atomizedCss;
   const atomizedErrors = atomized.styleErrors?.length || styleErrors?.length;

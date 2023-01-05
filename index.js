@@ -1,12 +1,20 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 
 const runBenchmark = require('./tool.js');
 
 function runBenchmarks (atomizer) {
   function read (file) {
-    return String(fs.readFileSync(file));
+    let filePath = path.resolve(__dirname, file);
+    if (
+      file.includes('node_modules') &&
+      !fs.existsSync(path.resolve(__dirname, 'node_modules'))
+    ) {
+      filePath = path.resolve(__dirname, '..', '..', file);
+    }
+    return String(fs.readFileSync(filePath));
   }
 
   // Inputs
