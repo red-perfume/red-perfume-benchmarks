@@ -1,0 +1,19 @@
+{
+  "name": "red-perfume-benchmark",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node index.js"
+  },
+  "ManifestComments": [
+    "Pinned gzip-size to 6 because 7 requires ESM import"
+  ],
+  "dependencies": {
+    "bootstrap3": "git@github.com:twbs/bootstrap.git#v3.4.1",
+    "bootstrap4": "git@github.com:twbs/bootstrap.git#v4.6.2",
+    "bootstrap5": "git@github.com:twbs/bootstrap.git#v5.2.3",
+    "foundation6": "git@github.com:foundation/foundation-sites.git#v6.7.5",
+    "gzip-size": "^6.0.0",
+    "sass": "^1.57.1"
+  }
+}
