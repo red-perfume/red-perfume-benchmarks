@@ -1,6 +1,7 @@
 {
   "name": "red-perfume-benchmark",
   "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
     "start": "node run.js",
     "test": "node update-readme.js"
