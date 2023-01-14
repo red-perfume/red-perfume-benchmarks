@@ -88,7 +88,8 @@ function runBenchmark (input, atomizer) {
     savings: getSavings(atomizedMinifiedLength, inputMinifiedLength),
     inputGzipBytes: inputGzip,
     atomizedGzipBytes: atomizedGzip,
-    gzipSavings: getSavings(atomizedGzip, inputGzip)
+    gzipSavings: getSavings(atomizedGzip, inputGzip),
+    atomizedCss
   };
 
   if (atomizedErrors && !atomizedMinifiedLength) {
