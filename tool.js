@@ -6,6 +6,8 @@ const path = require('path');
 const gzipSize = require('gzip-size');
 const sass = require('sass');
 
+const helpers = require('./helpers.js');
+
 const NA = 'N/A';
 
 let redPerfumeCss = function () {
@@ -39,19 +41,44 @@ function runBenchmark (input, atomizer) {
   }
 
   // Input
-  const inputMinified = sass.compileString(input, { style }).css;
-  const inputMinifiedLength = inputMinified.length;
-  const inputGzip = gzipSize.sync(inputMinified);
+  let inputMinified = '';
+  let inputGzip = 0;
+  try {
+    inputMinified = sass.compileString(input, { style }).css;
+  } catch (error1) {
+    helpers.throwError('Error minifying input via Sass compile', error1);
+  }
+  const inputMinifiedLength = inputMinified?.length || 0;
+  try {
+    inputGzip = gzipSize.sync(inputMinified);
+  } catch (error2) {
+    helpers.throwError('Error gzipping input CSS', error2);
+  }
 
   // Atomized
+  let atomized = {};
+  let atomizedMinified = '';
+  let atomizedGzip = 0;
   const start = new Date();
-  const atomized = atomizer({ uglify, input, customLogger });
+  try {
+    atomized = atomizer({ uglify, input, customLogger });
+  } catch (error3) {
+    helpers.throwError('Error atomizing input', error3);
+  }
   const end = new Date();
   const atomizedCss = atomized.atomizedCss;
-  const atomizedErrors = atomized.styleErrors?.length || styleErrors?.length;
-  const atomizedMinified = sass.compileString(atomizedCss, { style }).css;
-  const atomizedMinifiedLength = atomizedMinified.length;
-  const atomizedGzip = gzipSize.sync(atomizedMinified);
+  const atomizedErrors = atomized.styleErrors?.length || styleErrors?.length || 0;
+  try {
+    atomizedMinified = sass.compileString(atomizedCss, { style }).css;
+  } catch (error4) {
+    helpers.throwError('Error minifying output via Sass compile', error4);
+  }
+  const atomizedMinifiedLength = atomizedMinified.length || 0;
+  try {
+    atomizedGzip = gzipSize.sync(atomizedMinified);
+  } catch (error5) {
+    helpers.throwError('Error gzipping output', error5);
+  }
 
   const results = {
     atomizedErrors,

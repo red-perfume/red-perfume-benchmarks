@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const helpers = require('./helpers.js');
 const runBenchmark = require('./tool.js');
 
 function runBenchmarks (atomizer) {
@@ -43,10 +44,16 @@ function runBenchmarks (atomizer) {
   const results = [];
   inputs.forEach(function (input) {
     const data = read(input.file);
+    let result = {};
+    try {
+      result = runBenchmark(data, atomizer);
+    } catch (error2) {
+      helpers.throwError('Error producing benchmark', error2);
+    }
     const output = {
       library: input.library,
       version: input.version,
-      ...runBenchmark(data, atomizer)
+      ...result
     };
     if (output.atomizedErrors) {
       errors = errors + 1;
